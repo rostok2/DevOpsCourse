@@ -44,6 +44,44 @@ cтворюємо pipeline
 добавляємо скрипт та Save далі Build Now
 ![](./images/pipeline-enter-script.png)
 
+pipeline {
+    agent any
+
+    tools {
+        maven 'Maven3' 
+    }
+
+    stages {
+        //потрібно якщо не хочемо добавляти в репозиторій github
+        stage('Get Code from Git') {
+            steps {
+                    
+                git branch: 'main', url: 'https://github.com/rostok2/gs-spring-boot.git'
+            }
+        }
+        
+        stage('Build Maven Project') {
+            steps {
+                echo 'Start building...'
+                
+                dir('complete') {
+                    sh 'mvn clean install'
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Build Successful! Archiving artifacts...'
+            archiveArtifacts artifacts: 'complete/target/*.jar', allowEmptyArchive: false
+        }
+        failure {
+            echo 'Build Failed :('
+        }
+    }
+}
+
 білд пройшов успішно
 ![](./images/pipeline-overview.png)
 ![](./images/pipeline-overview.png)
