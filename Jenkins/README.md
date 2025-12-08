@@ -34,3 +34,17 @@
 
 Висновок:
     Jenkins це інструмент який одєднує CI/CD процеси це свого роду кухня на якій готуються різні процеси, Maven робітник який буде робити продук(артефакт) .jar фбо .war
+
+
+
+Завдання із зірочкою: налаштувати декларативний пайплайн
+cтворюємо pipeline
+![](./images/pipeline.png)
+
+добавляємо скрипт та Save далі Build Now
+![](./images/pipeline-enter-script.png)
+
+білд пройшов успішно
+![](./images/pipeline-overview.png)
+![](./images/pipeline-overview.png)
+
