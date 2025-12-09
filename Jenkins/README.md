@@ -41,6 +41,9 @@
 cтворюємо pipeline
 ![](./images/pipeline.png)
 
+Є два варіанти
+
+1. Спосіб
 добавляємо скрипт та Save далі Build Now
 ![](./images/pipeline-enter-script.png)
 
@@ -52,7 +55,6 @@ pipeline {
     }
 
     stages {
-        //потрібно якщо не хочемо добавляти в репозиторій github
         stage('Get Code from Git') {
             steps {
                     
@@ -81,6 +83,15 @@ pipeline {
         }
     }
 }
+2. Спосіб
+добавляємо в репозиторій jenkinsfile
+![](./images/jenkinsfile-in-git.png)
+
+заповнюємо поля наведені в картинках
+![](./images/pipeline-git-add-repo.png)
+![](./images/pipeline-git-add-repo-2.png)
+
+в обох випадках результат має бути однаковий
 
 білд пройшов успішно
 ![](./images/pipeline-overview.png)
