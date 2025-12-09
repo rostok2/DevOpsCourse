@@ -87,6 +87,36 @@ pipeline {
 добавляємо в репозиторій jenkinsfile
 ![](./images/jenkinsfile-in-git.png)
 
+pipeline {
+    agent any
+
+    tools {
+        maven 'Maven3' 
+    }
+
+    stages {        
+        stage('Build Maven Project') {
+            steps {
+                echo 'Start building...'
+                
+                dir('complete') {
+                    sh 'mvn clean install'
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Build Successful! Archiving artifacts...'
+            archiveArtifacts artifacts: 'complete/target/*.jar', allowEmptyArchive: false
+        }
+        failure {
+            echo 'Build Failed :('
+        }
+    }
+}
+
 заповнюємо поля наведені в картинках
 ![](./images/pipeline-git-add-repo.png)
 ![](./images/pipeline-git-add-repo-2.png)
