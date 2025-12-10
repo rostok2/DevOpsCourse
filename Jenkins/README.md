@@ -157,4 +157,4 @@ post {
     }
 
 після цього має бути така відповідь
-![](./images/telegram-group.png)
+![](./images/telegram-report.png)
