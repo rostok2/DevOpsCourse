@@ -127,3 +127,34 @@ pipeline {
 ![](./images/pipeline-overview.png)
 ![](./images/pipeline-overview.png)
 
+
+Завдання з двома зірочками
+1. Створіть Telegram-бота
+Потрібно створити групу додати туди бота потім щось бути написати та в браузері в url вставити https://api.telegram.org/bot<ВАШ_ТОКЕН>/sendMessage для того щоб зчитати повідомлення для того щоб дістати id чату має бути щось накшталт '-99999999'
+![](./images/telegram-group.png)
+
+далі нам потрібно змінити частину коду щоб надсилати повідомлення а саме тут добавився telegramSend messag для відправки повідомлення
+post {
+        success {
+            echo 'Build Successful! Archiving artifacts...'
+            archiveArtifacts artifacts: 'complete/target/*.jar', allowEmptyArchive: false
+            
+            sh """
+                curl -s -X POST https://api.telegram.org/bot<ВАШ_ТОКЕН_ВСТАВТЕ_СЮДИ>/sendMessage \
+                -d chat_id=<ВАШ_ID_CHAT> \
+                -d text="✅ Успіх! Проєкт ${env.JOB_NAME} (Build #${env.BUILD_NUMBER}) зібрано."
+            """
+        }
+        failure {
+            echo 'Build Failed :('
+            
+            sh """
+                curl -s -X POST https://api.telegram.org/bot<ВАШ_ТОКЕН_ВСТАВТЕ_СЮДИ>/sendMessage \
+                -d chat_id=<ВАШ_ID_CHAT> \
+                -d text="❌ Провал! Проєкт ${env.JOB_NAME} впав."
+            """
+        }
+    }
+
+після цього має бути така відповідь
+![](./images/telegram-group.png)

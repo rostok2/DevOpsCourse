@@ -5,8 +5,6 @@ pipeline {
         maven 'Maven3' 
     }
 
-
-
     stages {
         '''
         //потрібно якщо не хочемо добавляти в репозиторій github
@@ -28,16 +26,28 @@ pipeline {
             }
         }
 
-
     }
 
     post {
         success {
             echo 'Build Successful! Archiving artifacts...'
             archiveArtifacts artifacts: 'complete/target/*.jar', allowEmptyArchive: false
+            
+            sh """
+                curl -s -X POST https://api.telegram.org/bot<ВАШ_ТОКЕН_ВСТАВТЕ_СЮДИ>/sendMessage \
+                -d chat_id=<ВАШ_ID_CHAT> \
+                -d text="✅ Успіх! Проєкт ${env.JOB_NAME} (Build #${env.BUILD_NUMBER}) зібрано."
+            """
         }
         failure {
             echo 'Build Failed :('
+            
+            sh """
+                curl -s -X POST https://api.telegram.org/bot<ВАШ_ТОКЕН_ВСТАВТЕ_СЮДИ>/sendMessage \
+                -d chat_id=<ВАШ_ID_CHAT> \
+                -d text="❌ Провал! Проєкт ${env.JOB_NAME} впав."
+            """
         }
     }
+
 }
