@@ -1,0 +1,59 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+    config.vm.box = "bento/ubuntu-24.04"
+  
+    # =================================================================
+    # 1. VM1: Загальнодоступний вебсервер (DHCP)
+    # =================================================================
+    config.vm.define "vm1" do |subconfig|
+      subconfig.vm.hostname = "webserver-vm1"
+  
+      
+      subconfig.vm.network "public_network"
+  
+      
+      subconfig.vm.synced_folder "./vm1", "/home/vagrant/test_vm1"
+  
+      
+      subconfig.vm.provision "shell", inline: "echo 'vm1 done'"
+    end
+  
+    # =================================================================
+    # 2. VM2: Приватний сервер (Static IP)
+    # =================================================================
+    config.vm.define "vm2" do |subconfig|
+      subconfig.vm.hostname = "private-vm2"
+  
+     
+      subconfig.vm.network "private_network", ip: "192.168.56.20"
+  
+      
+      subconfig.vm.synced_folder "./vm2", "/home/vagrant/test_vm2"
+  
+     
+      subconfig.vm.provision "shell", path: "vm2/script.sh"
+    end
+  
+    # =================================================================
+    # 3. VM3: Публічний сервер (Static IP + Bridge)
+    # =================================================================
+    config.vm.define "vm3" do |subconfig|
+      subconfig.vm.hostname = "static-vm3"
+  
+      
+      subconfig.vm.network "public_network", ip: "192.168.1.222", bridge: "enp3s0"
+  
+      
+      subconfig.vm.synced_folder "./vm3", "/home/vagrant/test_vm3"
+  
+      subconfig.vm.provision "shell", inline: "echo 'vm3 done'"
+    end
+  
+    
+    config.vm.provider "virtualbox" do |vb|
+      vb.memory = "1024"
+      vb.cpus = 1
+    end
+  end
