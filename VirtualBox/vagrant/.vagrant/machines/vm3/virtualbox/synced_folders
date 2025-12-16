@@ -1,0 +1,1 @@
+{"virtualbox":{"/home/vagrant/test_vm3":{"guestpath":"/home/vagrant/test_vm3","hostpath":"/home/rastishka/Desktop/DevOpsCourse/VirtualBox/vagrant/vm3","disabled":false,"__vagrantfile":true},"/vagrant":{"guestpath":"/vagrant","hostpath":"/home/rastishka/Desktop/DevOpsCourse/VirtualBox/vagrant","disabled":false,"__vagrantfile":true}}}
