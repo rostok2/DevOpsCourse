@@ -41,7 +41,7 @@
     ![](./images/pids.png)
 
     беремо один і ідем досліджувати
-    
+
     ![](./images/pid-descriptors.png)
 
     дискриптори це числа від 0 - 9 що кожен з них означає
@@ -87,6 +87,7 @@
 PPA-репозиторій для Nginx
 
 ppa не має
+
 ![](./images/not-ppa.png)
 
 встановлюємо ppa
@@ -94,6 +95,7 @@ sudo add-apt-repository ppa:ondrej/nginx -y
 sudo apt update
 
 ppa зявилося
+
 ![](./images/ppa.png)
 
 встановлюємо версію ppa
@@ -109,4 +111,5 @@ sudo apt install nginx -y
 sudo ppa-purge ppa:ondrej/nginx
 
 перевіряємо
+
 ![](./images/after-ppa-purge.png)
