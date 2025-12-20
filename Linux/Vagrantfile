@@ -10,6 +10,15 @@ Vagrant.configure("2") do |config|
     vb.name = "VagrantVM_Nginx_Main"
     vb.memory = "2048"
     vb.cpus = 2
+
+    # Створюємо файл віртуального диска на 5 ГБ
+    file_to_disk = "web_data.vdi" # пишемо змінну в якій зберігаємо назву фалу
+    unless File.exist?(file_to_disk) # перевіряє чи файл не був створений так як якщо ви будемо перезапускати віртуалку воно захоче створити такий самий фал і буде видавати помилку так як він вже існує
+      vb.customize ['createhd', '--filename', file_to_disk, '--size', 5120] # пряма команда для створення нового жорсткого диска (але вона ще не підключена до віртуальної машини)
+    end
+
+    # Ця команда каже візьми той фал який ми створили і встав його в порт віртуальної машини
+    vb.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', file_to_disk] 
   end
 
   # Запуск скрипта встановлення
