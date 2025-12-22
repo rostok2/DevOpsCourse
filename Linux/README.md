@@ -382,3 +382,12 @@ sudo nginx -t
 
 перезапускаємо nginx щоб застосувати зміни
 sudo systemctl restart nginx
+
+
+#Дивимося працездатність
+заходимо за посилання http://localhost:8081/ я прокидував на порт 8081
+сторінка сайту
+![](./images/web-site.png)
+
+логи
+![](./images/web-site-logs.png)
