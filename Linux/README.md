@@ -163,7 +163,7 @@ vb.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--port',
 ![](./images/new-html-page.png)
 
 
-#для того щоб розгорнути додаток я зніс повністю віртуалку створив нову та добавив 3 окремі диски
+# для того щоб розгорнути додаток я зніс повністю віртуалку створив нову та добавив 3 окремі диски
 
 config.vm.provider "virtualbox" do |vb|
     vb.name = "VagrantVM_Full_Infra"
@@ -187,14 +187,16 @@ config.vm.provider "virtualbox" do |vb|
     end
   end
 
-#1.монтуємо диски за трохи новим алгоритмом
+# 1.монтуємо диски за трохи новим алгоритмом
 
 створення дисків Натискайте: n, p, 1, Enter, Enter, w
+
 sudo fdisk /dev/sdb  
 sudo fdisk /dev/sdc
 sudo fdisk /dev/sdd
 
 створення файлової системи
+
 sudo mkfs.ext4 /dev/sdb1
 sudo mkfs.ext4 /dev/sdc1
 sudo mkfs.ext4 /dev/sdd1
@@ -202,9 +204,11 @@ sudo mkfs.ext4 /dev/sdd1
 створення точок монтування та підключення
 
 створення папок
+
 sudo mkdir -p /mnt/webdata /mnt/dbdata /mnt/backups
 
 монтуємо диски до папок
+
 sudo mount /dev/sdb1 /mnt/webdata
 sudo mount /dev/sdc1 /mnt/dbdata
 sudo mount /dev/sdd1 /mnt/backups
@@ -212,37 +216,46 @@ sudo mount /dev/sdd1 /mnt/backups
 налаштування автоматичного монтування
 
 дізнаємося UUID
+
 sudo blkid | grep -E 'sdb1|sdc1|sdd1'
 
 заходимо в sudo nano /etc/fstab та вставляємо
+
 UUID=bfc9ab25-a36e-4579-9c60-ad49a542e360  /mnt/webdata  ext4  defaults  0  2
 UUID=f1454462-25e9-4c75-917d-4c05a7fffb92  /mnt/dbdata   ext4  defaults  0  2
 UUID=1533a08d-58e9-4f22-8b97-6a354ddccc9c /mnt/backups  ext4  defaults  0  2
 
 
 оновимо конфігурацію системи
+
 sudo systemctl daemon-reload
 
 
-#2.створення користувача 
+# 2.створення користувача 
 створення користувача deploy-user для того щоб він керував сайтом
+
 sudo useradd -m -s /bin/bash deploy-user
 
 додаємо його до групи www-data
+
 sudo usermod -aG www-data deploy-user
 
 передаємо права на диск новому користувачу
+
 sudo chown -R deploy-user:deploy-user /mnt/webdata /mnt/backups
 
 встановлюємо права доступу такі що власник може все всі інші тільки читати
+
 sudo chmod -R 755 /mnt/webdata /mnt/backups
 
-#3.postgresql на окремому диску /mnt/dbdata
+# 3.postgresql на окремому диску /mnt/dbdata
 
 зупинка postgresql
+
 sudo systemctl stop postgresql
 
 перенесення данних
+
 sudo rsync -av /var/lib/postgresql/16/main /mnt/dbdata/
 
 зміна конфігурацій
@@ -254,14 +267,16 @@ sudo rsync -av /var/lib/postgresql/16/main /mnt/dbdata/
 права що тільки влласник має доступ sudo chmod 700 /mnt/dbdata/main
 
 запускаємо базу та дивимося чи працює
+
 sudo systemctl start postgresql
 
 sudo -u postgres psql -c "SHOW data_directory;"
 
 
-#4. Деплой артефактів на диск /mnt/webdata
+# 4. Деплой артефактів на диск /mnt/webdata
 
 вхід під створеним користувачем
+
 sudo -u deploy-user -i
 cd /mnt/webdata
 
@@ -273,29 +288,37 @@ cd /mnt/webdata
     тому ми виходимо з юзера
 
     повне очищення папки
+
     sudo rm -rf /mnt/webdata/*
     sudo rm -rf /mnt/webdata/.* 2>/dev/null
 
     далі заходимо назад в юзера та робимо клон
+
     git clone https://gitlab.com/iross335/skill_quest.git .
 
 створення віртуального серидовищя
+
 python3 -m venv venv
 source venv/bin/activate
 
 встановлення бібліотек
+
 pip install --upgrade pip
 pip install -r requirements.txt
 pip install gunicorn psycopg2-binary python-dotenv
 
 створення конфігурацій
+
 nano .env
+
 та вставляємо 
+
 DATABASE_URL=postgresql://skilluser:postgres@localhost/skill_quest_db
 SECRET_KEY=super-secret-key-for-skillquest
 FLASK_APP=run.py
 
 створення бази та користувача всередині pstgresql
+
 sudo -u postgres psql
 
 створюємо базу юзера та даємо права
@@ -311,7 +334,7 @@ GRANT ALL ON SCHEMA public TO skilluser;
 міграції
 flask db upgrade
 
-#5. Автоматизація та автозапуск
+# 5. Автоматизація та автозапуск
 
 виходимо з юзера в якому робили міграцію
 створюємо фали сервісу
@@ -350,7 +373,7 @@ sudo systemctl start skillquest
 systemctl status skillquest
 
 
-#6. налаштовуємо nginx
+# 6. налаштовуємо nginx
 відкриваємо конфігурацію nginx
 
 sudo nano /etc/nginx/conf.d/default.conf
@@ -384,10 +407,12 @@ sudo nginx -t
 sudo systemctl restart nginx
 
 
-#Дивимося працездатність
+# Дивимося працездатність
 заходимо за посилання http://localhost:8081/ я прокидував на порт 8081
 сторінка сайту
+
 ![](./images/web-site.png)
 
 логи
+
 ![](./images/web-site-logs.png)
