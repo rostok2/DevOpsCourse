@@ -65,24 +65,168 @@
 
 в кінець вставляємо запис розкладу
 
-    0 7 * * * /home/vagrant/scripts/backup.sh
+    5 17 * * * /home/vagrant/scripts/backup.sh
 
 розшифровка
 
     у cron є 5 полів для часу:
-        0 — хвилина (0-ва хвилина)
-        7 — година (7-га година ранку)
+        5 — хвилина (0-ва хвилина)
+        17 — година (7-га година ранку)
         * — день місяця (кожен день)
         * — місяць (кожен місяць)
         * — день тижня (кожен день тижня)
     та шлях то файлу який треба запустити
 
-видаляємо старий бекап та чекаємо 7:30 щоб backup зробився
+видаляємо старий бекап та чекаємо 17:05 щоб backup зробився
 
 ![](./images/show-backup-dir.png)
 
 # 2. Створити та налаштувати власний systemd сервіс для автоматичного запуску скрипта, який перевіряє доступність веб-сайту та записує результат у лог-файл.
 
+створюємо папку з логами в директорії з backup
+
+    mkdir logs
+
+створюємо баш для моніторингу логів сайту
+
+    #!/bin/bash
+
+    URL="http://localhost:80"
+    LOG_FILE="/mnt/backups/logs/site_monitor.log"
+
+    while true
+    do
+
+        HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" $URL)
+        TIMESTAMP=$(date "+%Y-%m-%d %H:%M:%S")
+
+        if [ "$HTTP_STATUS" -eq 200 ] || [ "$HTTP_STATUS" -eq 302 ]; then
+            echo "[$TIMESTAMP] OK: Сайт працює (Код: $HTTP_STATUS)" >> $LOG_FILE
+        else
+            echo "[$TIMESTAMP] УВАГА: Сайт повернув помилку! (Код: $HTTP_STATUS)" >> $LOG_FILE
+        fi
+
+        sleep 60
+    done
+
+у папочці script яку створили до цього створюємо файл та вставляємо в нього створений bash
+
+    nano site_logs.sh
+
+права на виконання
+
+    chmod +x site_logs.sh
+
+створємо конфіг для systemd сервісу
+конфіг
+
+    [Unit]
+    Description=Monitoring web site
+    After=network.target nginx.service
+
+    [Service]
+    User=vagrant
+    ExecStart=/bin/bash /home/vagrant/scripts/site_logs.sh
+    Restart=always
+    RestartSec=10
+
+    [Install]
+    WantedBy=multi-user.target
+
+створюємо сервіс
+
+    sudo nano site-monitor.service
+
+оновлюємо память systemd щоб він побачив новий файл
+
+    sudo systemctl daemon-reload
+
+дозвіл автозапуску при старті системи
+
+    sudo systemctl enable site-monitor.service
+
+запускаємо сервіс
+
+    sudo systemctl start site-monitor.service
+
+дивимося логи 
+
+![](./images/show-site-logs.png)
+
 # 3. Написати скрипт для моніторингу використання ресурсів системи та збереження результатів у файл.
 
-# 4. Зробити ротування файлу з access логом Nginx.
+створення скрипта
+
+    #!/bin/bash
+
+    LOG_FILE="/mnt/backups/logs/resource_usage.log"
+
+    echo "================ REPORT: $(date '+%Y-%m-%d %H:%M:%S') ================" >> $LOG_FILE
+
+    CPU_LOAD=$(uptime | awk -F'load average:' '{ print $2 }')
+    echo "CPU (Load Avg):$CPU_LOAD" >> $LOG_FILE
+
+    RAM_USAGE=$(free -m | grep Mem | awk '{print "Used: " $3 "MB / Total: " $2 "MB"}')
+    echo "RAM usage: $RAM_USAGE" >> $LOG_FILE
+
+    DISK_ROOT=$(df -h / | tail -1 | awk '{print $5}')
+    DISK_DB=$(df -h /mnt/dbdata | tail -1 | awk '{print $5}')
+    echo "Disk fill: Root(/)=$DISK_ROOT, DB_Disk(/mnt/dbdata)=$DISK_DB" >> $LOG_FILE
+
+    echo "----------------------------------------------------------------" >> $LOG_FILE
+
+у папочці script яку створили до цього створюємо файл та вставляємо в нього створений bash
+
+    nano resource_monitor.sh
+
+запускаємо скрипт 
+
+    /home/vagrant/scripts/resource_monitor.sh
+
+дивимося чи є моніторинг ресурсів
+
+![](./images/show-monitoring-resource.png)
+
+зробимо крон щоб працював кожні 5 хв
+
+    crontab -e
+
+втаставляємо
+
+    */10 * * * * /home/vagrant/scripts/resource_monitor.sh
+
+дивимось чи змінилося
+
+![](./images/show-log-resource.png)
+
+# 4. Зробити ротування файлу з access логом Nginx
+
+пишемо правило
+
+    /var/log/nginx/*.log {
+        daily
+        missingok
+        rotate 7
+        compress
+        delaycompress
+        notifempty
+        create 0640 www-data adm
+        sharedscripts
+        postrotate
+            [ -f /var/run/nginx.pid ] && kill -USR1 `cat /var/run/nginx.pid`
+        endscript
+    }
+
+створюємо файл конфігурацій
+
+    sudo nano nginx_custom
+
+
+запускаємо його
+
+    sudo logrotate -f nginx_custom
+
+виводимо результат
+
+![](./images/logrotate-finish.png)
+
