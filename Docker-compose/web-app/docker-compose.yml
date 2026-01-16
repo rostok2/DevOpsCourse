@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  web:
+    image: nginx:latest
+    ports:
+      - "8080-8082:80"
+    volumes:
+      - ./index.html:/usr/share/nginx/html/index.html
+      - web-data:/var/www/html
+    networks:
+      - appnet
+
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postger
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: mydb
+    volumes:
+      - db-data:/var/lib/postgresql
+    networks:
+      - appnet
+
+  cache:
+    image: redis:latest
+    networks:
+      - appnet
+
+volumes:
+  db-data:
+  web-data:
+
+networks:
+  appnet:
