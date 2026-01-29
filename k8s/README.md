@@ -192,6 +192,7 @@ spec:
 
 вивід
 
+```bash
   2026-01-29T13:05:12+0000: [libs]: libbpf: prog 'openat_e': failed to create tracepoint 'syscalls/sys_enter_openat' perf event: No such file or directory
   2026-01-29T13:05:12+0000: [libs]: libpman: failure while attaching TOCTOU mitigation program for 'openat' system call. Detection will continue to work, but TOCTOU mitigation may not properly work (errno: 2 | message: No such file or directory
   2026-01-29T13:20:21.464826410+0000: Warning Sensitive file opened for reading by non-trusted program | file=/etc/pam.d/common-auth gparent=<NA> ggparent=<NA> gggparent=<NA> evt_type=openat user=root user_uid=0 user_loginuid=1000 process=pkexec proc_exepath=/usr/bin/pkexec parent=update-notifier command=pkexec /usr/lib/update-notifier/package-system-locked terminal=0 container_id=host container_name=host container_image_repository= container_image_tag= k8s_pod_name=<NA> k8s_ns_name=<NA>
@@ -202,7 +203,7 @@ spec:
   2026-01-29T13:20:21.465913175+0000: Warning Sensitive file opened for reading by non-trusted program | file=/etc/pam.d/common-auth gparent=<NA> ggparent=<NA> gggparent=<NA> evt_type=openat user=root user_uid=0 user_loginuid=1000 process=pkexec proc_exepath=/usr/bin/pkexec parent=update-notifier command=pkexec /usr/lib/update-notifier/package-system-locked terminal=0 container_id=host container_name=host container_image_repository= container_image_tag= k8s_pod_name=<NA> k8s_ns_name=<NA>
   2026-01-29T13:20:21.465925548+0000: Warning Sensitive file opened for reading by non-trusted program | file=/etc/pam.d/common-account gparent=<NA> ggparent=<NA> gggparent=<NA> evt_type=openat user=root user_uid=0 user_loginuid=1000 process=pkexec proc_exepath=/usr/bin/pkexec parent=update-notifier command=pkexec /usr/lib/update-notifier/package-system-locked terminal=0 container_id=host container_name=host container_image_repository= container_image_tag= k8s_pod_name=<NA> k8s_ns_name=<NA>
   2026-01-29T13:20:21.465936279+0000: Warning Sensitive file opened for reading by non-trusted program | file=/etc/pam.d/common-password gparent=<NA> ggparent=<NA> gggparent=<NA> evt_type=openat user=root user_uid=0 user_loginuid=1000 process=pkexec proc_exepath=/usr/bin/pkexec parent=update-notifier command=pkexec /usr/lib/update-notifier/package-system-locked terminal=0 container_id=host container_name=host container_image_repository= container_image_tag= k8s_pod_name=<NA> k8s_ns_name=<NA>
-
+```
 
 # Виконайте минулі два завдання, створивши helm-chart
 
