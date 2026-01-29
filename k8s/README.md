@@ -192,7 +192,7 @@ spec:
 
 вивід
 
-```bash
+```test
   2026-01-29T13:05:12+0000: [libs]: libbpf: prog 'openat_e': failed to create tracepoint 'syscalls/sys_enter_openat' perf event: No such file or directory
   2026-01-29T13:05:12+0000: [libs]: libpman: failure while attaching TOCTOU mitigation program for 'openat' system call. Detection will continue to work, but TOCTOU mitigation may not properly work (errno: 2 | message: No such file or directory
   2026-01-29T13:20:21.464826410+0000: Warning Sensitive file opened for reading by non-trusted program | file=/etc/pam.d/common-auth gparent=<NA> ggparent=<NA> gggparent=<NA> evt_type=openat user=root user_uid=0 user_loginuid=1000 process=pkexec proc_exepath=/usr/bin/pkexec parent=update-notifier command=pkexec /usr/lib/update-notifier/package-system-locked terminal=0 container_id=host container_name=host container_image_repository= container_image_tag= k8s_pod_name=<NA> k8s_ns_name=<NA>
@@ -312,12 +312,14 @@ spec:
 
 має вивестись
 
+```test
   NAME: redis-release
   LAST DEPLOYED: Thu Jan 29 23:07:21 2026
   NAMESPACE: redis-helm
   STATUS: deployed
   REVISION: 1
   TEST SUITE: None
+```
 
 ### falco-helm-chart
 
@@ -417,12 +419,14 @@ spec:
 
 має вивестись
 
+```text
   NAME: falco-release
   LAST DEPLOYED: Thu Jan 29 23:11:04 2026
   NAMESPACE: falco-helm
   STATUS: deployed
   REVISION: 1
   TEST SUITE: None
+```
 
 ### перевірка усіх под
 
@@ -432,17 +436,19 @@ spec:
 
 вивід
 
-  NAMESPACE     NAME                               READY   STATUS    RESTARTS        AGE
-  falco-helm    falco-4kjzb                        1/1     Running   0               96s
-  falco         falco-fm99z                        1/1     Running   1 (9m46s ago)   8h
-  kube-system   coredns-66bc5c9577-q45k5           1/1     Running   6 (9m46s ago)   5d2h
-  kube-system   etcd-minikube                      1/1     Running   6 (9m46s ago)   5d2h
-  kube-system   kube-apiserver-minikube            1/1     Running   6 (9m46s ago)   5d2h
-  kube-system   kube-controller-manager-minikube   1/1     Running   6 (9m46s ago)   5d2h
-  kube-system   kube-proxy-5w5hg                   1/1     Running   6 (9m46s ago)   5d2h
-  kube-system   kube-scheduler-minikube            1/1     Running   6 (9m46s ago)   5d2h
-  kube-system   storage-provisioner                1/1     Running   11 (9m5s ago)   5d2h
-  redis-helm    redis-0                            1/1     Running   0               5m19s
-  redis-helm    redis-1                            1/1     Running   0               5m18s
-  redis         redis-0                            1/1     Running   6 (9m46s ago)   4d23h
-  redis         redis-1                            1/1     Running   6 (9m46s ago)   4d23h
+```test
+NAMESPACE     NAME                               READY   STATUS    RESTARTS        AGE
+falco-helm    falco-4kjzb                        1/1     Running   0               96s
+falco         falco-fm99z                        1/1     Running   1 (9m46s ago)   8h
+kube-system   coredns-66bc5c9577-q45k5           1/1     Running   6 (9m46s ago)   5d2h
+kube-system   etcd-minikube                      1/1     Running   6 (9m46s ago)   5d2h
+kube-system   kube-apiserver-minikube            1/1     Running   6 (9m46s ago)   5d2h
+kube-system   kube-controller-manager-minikube   1/1     Running   6 (9m46s ago)   5d2h
+kube-system   kube-proxy-5w5hg                   1/1     Running   6 (9m46s ago)   5d2h
+kube-system   kube-scheduler-minikube            1/1     Running   6 (9m46s ago)   5d2h
+kube-system   storage-provisioner                1/1     Running   11 (9m5s ago)   5d2h
+redis-helm    redis-0                            1/1     Running   0               5m19s
+redis-helm    redis-1                            1/1     Running   0               5m18s
+redis         redis-0                            1/1     Running   6 (9m46s ago)   4d23h
+redis         redis-1                            1/1     Running   6 (9m46s ago)   4d23h
+```
