@@ -175,20 +175,20 @@ spec:
 
 аплаємо маніфест
 
-  kubectl apply -f falco-ds.yaml
+    kubectl apply -f falco-ds.yaml
 
 перевіряємо поди
 
-  kubectl get pods -n falco -l app=falco
+    kubectl get pods -n falco -l app=falco
 
 вивід
 
-  NAME          READY   STATUS    RESTARTS   AGE
-  falco-fm99z   1/1     Running   0          12s
+    NAME          READY   STATUS    RESTARTS   AGE
+    falco-fm99z   1/1     Running   0          12s
 
 перевірка логів
 
-  kubectl logs -l app=falco -n falco
+    kubectl logs -l app=falco -n falco
 
 вивід
 
@@ -209,21 +209,21 @@ spec:
 
 створюємо папки для чартів
 
-  mkdir redis-helm-chart
-  mkdir falco-helm-chart
+    mkdir redis-helm-chart
+    mkdir falco-helm-chart
 
 також в кожній з створених папок виконуємо такі команди
 
-  mkdir templates
-  touch values.yaml
-  touch Chart.yaml
+    mkdir templates
+    touch values.yaml
+    touch Chart.yaml
 
 створюємо відповідні файли redis-helm-chart/templates(redis-service.yaml, redis-sts.yaml) та falco-helm-chart/templates(falco-ds.yaml)
 
 також створимо два окремі namespace
 
-  kubectl create namespace redis-helm
-  kubectl create namespace falco-helm
+    kubectl create namespace redis-helm
+    kubectl create namespace falco-helm
 
 
 ### redis-helm-chart
@@ -308,7 +308,7 @@ spec:
 
 застосовуємо
 
-  helm install redis-release ./redis-helm-chart -n redis-helm
+    helm install redis-release ./redis-helm-chart -n redis-helm
 
 має вивестись
 
@@ -415,7 +415,7 @@ spec:
 
 застосовуємо
 
-  helm install falco-release ./falco-helm-chart -n falco-helm
+    helm install falco-release ./falco-helm-chart -n falco-helm
 
 має вивестись
 
@@ -432,7 +432,7 @@ spec:
 
 команда
 
-  kubectl get pods -A
+    kubectl get pods -A
 
 вивід
 
