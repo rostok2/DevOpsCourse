@@ -1,0 +1,6 @@
+apiVersion: v2
+name: falco-chart
+description: Helm chart для розгортання Falco через DaemonSet
+type: application
+version: 0.1.0
+appVersion: "latest"

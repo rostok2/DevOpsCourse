@@ -1,0 +1,7 @@
+namespace: redis-helm
+replicas: 2
+image: redis:7.0-alpine
+service:
+  port: 6379
+storage:
+  size: 1Gi
