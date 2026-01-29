@@ -154,7 +154,7 @@ RETURNING *;
 
 вивід
 
-![](./images/update1.png)
+![](./images/update2.png)
 
 Анонімізація назв закладів
 
@@ -166,7 +166,7 @@ RETURNING *;
 
 вивід
 
-![](./images/update1.png)
+![](./images/update3.png)
 
 Зміна вартості навчання на випадкову
 
@@ -178,4 +178,4 @@ RETURNING *;
 
 вивід
 
-![](./images/update1.png)
+![](./images/update4.png)
