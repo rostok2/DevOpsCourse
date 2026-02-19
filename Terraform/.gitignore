@@ -1,0 +1,19 @@
+# === Файли, згенеровані Terraform ===
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# === Файли, згенеровані AWS CLI v2 ===
+awscliv2.zip
+aws/
+
+# === Файли стану та кешу Python/Linux ===
+__pycache__/
+*.pyc
+*.pyo
+*.so
+*.so.*
+*.dist-info/
+*.egg-info/
+*.log
