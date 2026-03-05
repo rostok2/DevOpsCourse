@@ -14,7 +14,7 @@ Parameters:
   AMIID:
     Type: String
     Description: AMI ID for Amazon Linux 2
-    Default: ami-08d70e59c07c61a3a 
+    Default: ami-0036413a1289b6d37 
 
 Resources:
   InstanceSecurityGroup:
