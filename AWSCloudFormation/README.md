@@ -191,7 +191,7 @@ Resources:
   EC2Instance:
     Type: AWS::EC2::Instance
     Properties:
-      InstanceType: t2.micro
+      InstanceType: t3.micro
       ImageId: !Ref AMIID
       SubnetId: !Ref SubnetId
       IamInstanceProfile: !Ref InstanceProfileName
@@ -273,3 +273,5 @@ Outputs:
 Заходимо на веб морді в CloudFormation створюємо стек та пи створенні заванатжує файл main_stack.yaml
 
 Після цього чекаємо поки весь стек створиться
+
+![](./finish.png)

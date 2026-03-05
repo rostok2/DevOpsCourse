@@ -31,7 +31,7 @@ Resources:
   EC2Instance:
     Type: AWS::EC2::Instance
     Properties:
-      InstanceType: t2.micro
+      InstanceType: t4g.micro
       ImageId: !Ref AMIID
       SubnetId: !Ref SubnetId
       IamInstanceProfile: !Ref InstanceProfileName
