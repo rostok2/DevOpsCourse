@@ -1,0 +1,32 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Creates IAM Role for EC2 with S3 Read-Only access.
+
+Resources:
+  EC2S3Role:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
+      RoleName: IAMRoleForS3Access
+
+  EC2InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: "/"
+      Roles:
+        - !Ref EC2S3Role
+
+Outputs:
+  IAMRoleARN:
+    Description: ARN of the IAM Role
+    Value: !GetAtt EC2S3Role.Arn
+  InstanceProfileName:
+    Description: Name of the IAM Instance Profile
+    Value: !Ref EC2InstanceProfile

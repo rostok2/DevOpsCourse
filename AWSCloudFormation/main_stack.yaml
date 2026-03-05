@@ -1,0 +1,53 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Main Stack to orchestrate all other component stacks.
+
+Parameters:
+  BucketNameParam:
+    Type: String
+    Description: my-unique-data-bucket-cf-2024
+  AMIID:
+    Type: String
+    Description: AMI ID для Amazon Linux 2 в us-east-2.
+
+Resources:
+  NetworkStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub 'https://my-templates-for-cf-stack-12345.s3.amazonaws.com/vpc_network.yaml'
+      Parameters: {}
+
+  IAMStack:
+    Type: AWS::CloudFormation::Stack
+    DependsOn: NetworkStack
+    Properties:
+      TemplateURL: !Sub 'https://my-templates-for-cf-stack-12345.s3.amazonaws.com/iam_role.yaml'
+      Parameters: {}
+
+  S3Stack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub 'https://my-templates-for-cf-stack-12345.s3.amazonaws.com/s3_bucket.yaml'
+      Parameters:
+        BucketNameParam: !Ref BucketNameParam
+
+  EC2Stack:
+    Type: AWS::CloudFormation::Stack
+    DependsOn: 
+      - NetworkStack
+      - IAMStack
+      - S3Stack
+    Properties:
+      TemplateURL: !Sub 'https://my-templates-for-cf-stack-12345.s3.amazonaws.com/ec2_compute.yaml'
+      Parameters:
+        VPCId: !GetAtt NetworkStack.Outputs.VPCId
+        SubnetId: !GetAtt NetworkStack.Outputs.PublicSubnetId
+        InstanceProfileName: !GetAtt IAMStack.Outputs.InstanceProfileName
+        AMIID: !Ref AMIID
+
+Outputs:
+  EC2PublicIP:
+    Description: Public IP of the EC2 instance.
+    Value: !GetAtt EC2Stack.Outputs.EC2PublicIP
+  S3BucketName:
+    Description: Name of the S3 Bucket.
+    Value: !GetAtt S3Stack.Outputs.S3BucketName
